@@ -1,7 +1,7 @@
 # File-Shares
 File Share Analysis Tools
 
-##F ileNamePath Export
+## FileNamePath Export
 Script to extract data for all files in a directory and export to csv.
 
 Data includes 
