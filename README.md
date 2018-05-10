@@ -2,7 +2,7 @@
 File Share Analysis Tools
 
 ## FileNamePath Export
-Script to extract data for all files in a directory and export to csv.
+PowerShell Script to extract data for all files in a directory and export to csv.
 
 Data includes 
 * 'Path'
