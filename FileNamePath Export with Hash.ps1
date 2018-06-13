@@ -1,14 +1,14 @@
 #Set-ExecutionPolicy Unrestricted
-$SourcePath = "E:\Music"
+$SourcePath = "G:\My Drive"
 
-$DestinationCSVPath = "e:\folders4.csv" #Destination for Temp CSV File
-$CSVColumnOrder = 'Path', 'IsDIR', 'Directory', 'Parent', 'Name', 'CreationTime', 'LastAccessTime', 'LastWriteTime', 'Extension', 'BaseName', 'B', 'Root', 'IsReadOnly', 'Attributes', 'Owner', 'AccessToString', 'Group'#, #'MD5', #'SHA1' #Order in which columns in CSV Output are ordered
+$DestinationCSVPath = "e:\G Drive Inventory 20180611.csv" #Destination for Temp CSV File
+$CSVColumnOrder = 'Path', 'IsDIR', 'Directory', 'FileCount', 'Parent', 'Name', 'CreationTime', 'LastAccessTime', 'LastWriteTime', 'Extension', 'BaseName', 'B', 'Root', 'IsReadOnly', 'Attributes', 'Owner', 'AccessToString', 'Group' #, #'MD5', #'SHA1' #Order in which columns in CSV Output are ordered
  
 #FOLDERS ONLY
 #$SourcePathFileOutput = Get-ChildItem $SourcePath -Recurse  | where {$_.PSIsContainer} 
 
 #FILES AND FOLDERS
-$SourcePathFileOutput = Get-ChildItem $SourcePath -Recurse 
+$SourcePathFileOutput = Get-ChildItem $SourcePath -Recurse  #| where {$_.PSIsContainer} #Uncomment for folders only
 
 
 $HashOutput = ForEach ($file in $SourcePathFileOutput){
@@ -20,6 +20,8 @@ Path = $file.FullName
 IsDIR = $file.PSIsContainer
 
 Directory = $File.DirectoryName
+
+Count = (GCI $File.FullName -Recurse).Count
 
 Parent = $file.Parent
 
