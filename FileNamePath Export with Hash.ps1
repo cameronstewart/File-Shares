@@ -21,7 +21,7 @@ IsDIR = $file.PSIsContainer
 
 Directory = $File.DirectoryName
 
-Count = (GCI $File.FullName -Recurse).Count
+FileCount = (GCI $File.FullName -Recurse).Count
 
 Parent = $file.Parent
 
