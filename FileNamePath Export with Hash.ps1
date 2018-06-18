@@ -2,7 +2,7 @@
 $SourcePath = "G:\My Drive"
 
 $DestinationCSVPath = "e:\G Drive Inventory 20180611.csv" #Destination for Temp CSV File
-$CSVColumnOrder = 'Path', 'IsDIR', 'Directory', 'FileCount', 'Parent', 'Name', 'CreationTime', 'LastAccessTime', 'LastWriteTime', 'Extension', 'BaseName', 'B', 'Root', 'IsReadOnly', 'Attributes', 'Owner', 'AccessToString', 'Group' #, #'MD5', #'SHA1' #Order in which columns in CSV Output are ordered
+$CSVColumnOrder = 'Path', 'IsDIR', 'Directory', 'FileCount', 'Parent', 'Name', 'CreationTime', 'LastAccessTime', 'LastWriteTime', 'Extension', 'BaseName', 'B'#, 'Root', 'IsReadOnly', 'Attributes', 'Owner', 'AccessToString', 'Group' #, #'MD5', #'SHA1' #Order in which columns in CSV Output are ordered
  
 #FOLDERS ONLY
 #$SourcePathFileOutput = Get-ChildItem $SourcePath -Recurse  | where {$_.PSIsContainer} 
@@ -39,17 +39,17 @@ BaseName = $File.BaseName
 
 B = $File.Length
 
-Root = $file.Root
+#Root = $file.Root
 
-IsReadOnly = $file.IsReadOnly
+#IsReadOnly = $file.IsReadOnly
 
-Attributes = $file.Attributes
+#Attributes = $file.Attributes
 
-Owner = $acl.owner
+#Owner = $acl.owner
 
-AccessToString = $acl.accesstostring
+#AccessToString = $acl.accesstostring
 
-Group = $acl.group
+#Group = $acl.group
 
 #MD5 = Get-FileHash $file.FullName -Algorithm MD5 | Select-Object -ExpandProperty Hash
 
