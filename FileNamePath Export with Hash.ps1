@@ -1,65 +1,57 @@
-#Set-ExecutionPolicy Unrestricted
-$SourcePath = "G:\My Drive"
+#Set-ExecutionPolicy Unrestricted$ID=1
 
-$DestinationCSVPath = "e:\G Drive Inventory 20180611.csv" #Destination for Temp CSV File
-$CSVColumnOrder = 'Path', 'IsDIR', 'Directory', 'FileCount', 'Parent', 'Name', 'CreationTime', 'LastAccessTime', 'LastWriteTime', 'Extension', 'BaseName', 'B'#, 'Root', 'IsReadOnly', 'Attributes', 'Owner', 'AccessToString', 'Group' #, #'MD5', #'SHA1' #Order in which columns in CSV Output are ordered
- 
-#FOLDERS ONLY
-#$SourcePathFileOutput = Get-ChildItem $SourcePath -Recurse  | where {$_.PSIsContainer} 
+$SourcePath="C:\users\username"
+$DestinationCSVPath = "C:\Users\users\export.csv"
 
-#FILES AND FOLDERS
-$SourcePathFileOutput = Get-ChildItem $SourcePath -Recurse  #| where {$_.PSIsContainer} #Uncomment for folders only
+$SourcePathFileOutput=@()
 
+#for have the parent dir
+$SourcePathFileOutput += Get-Item $SourcePath | %{
+$ParentPath=if ($_.PSIsContainer){$_.parent.FullName}else{$_.DirectoryName}
 
-$HashOutput = ForEach ($file in $SourcePathFileOutput){
-
-Write-Output (New-Object -TypeName PSCustomObject -Property @{
-
-Path = $file.FullName
-
-IsDIR = $file.PSIsContainer
-
-Directory = $File.DirectoryName
-
-FileCount = (GCI $File.FullName -Recurse).Count
-
-Parent = $file.Parent
-
-Name = $File.Name
-
-CreationTime = $File.CreationTime
-
-LastAccessTime = $File.LastAccessTime
-
-LastWriteTime = $File.LastWriteTime
-
-Extension = $File.Extension
-
-BaseName = $File.BaseName
-
-B = $File.Length
-
-#Root = $file.Root
-
-#IsReadOnly = $file.IsReadOnly
-
-#Attributes = $file.Attributes
-
-#Owner = $acl.owner
-
-#AccessToString = $acl.accesstostring
-
-#Group = $acl.group
-
-#MD5 = Get-FileHash $file.FullName -Algorithm MD5 | Select-Object -ExpandProperty Hash
-
-#SHA1 = Get-FileHash $file.FullName -Algorithm SHA1 | Select-Object -ExpandProperty Hash
-
-
-}) | Select-Object $CSVColumnOrder
-
+Add-Member -InputObject $_ -MemberType NoteProperty -Name "ID" -Value ($ID++)
+Add-Member -InputObject $_ -MemberType NoteProperty -Name "PARENTPATH" -Value $ParentPath
+$_
 }
 
- 
+#for have all directory and file
+$SourcePathFileOutput += Get-ChildItem $SourcePath -Recurse | %{
+$ParentPath=if ($_.PSIsContainer){$_.parent.FullName}else{$_.DirectoryName}
 
-$HashOutput | Export-Csv -NoTypeInformation -Path $DestinationCSVPath
+Add-Member -InputObject $_ -MemberType NoteProperty -Name "ID" -Value ($ID++)
+Add-Member -InputObject $_ -MemberType NoteProperty -Name "PARENTPATH" -Value $ParentPath
+$_
+}
+
+#List dir for optimise 
+$DirOutput=$SourcePathFileOutput | where {$_.psiscontainer}
+
+#for output result (add all properties you want)
+$list=foreach ($Current in $SourcePathFileOutput)
+{
+$Result=[pscustomobject]@{
+    Path = $Current.FullName
+    Name = $Current.Name
+    ISDIR=$Current.psiscontainer
+    ID=$Current.ID
+    PARENTID=($DirOutput | where {$_.FullName -eq $Current.PARENTPATH}).ID
+    PARENTPATH=$Current.PARENTPATH
+    ParentName = $Current.Parent
+    #FileCount = (GCI $Current.FullName -Recurse).Count
+    CreationTime = $Current.CreationTime
+    LastAccessTime = $Current.LastAccessTime
+    LastWriteTime = $Current.LastWriteTime
+    Extension = $Current.Extension
+    BaseName = $Current.BaseName
+    B = $Current.Length        
+    #MD5 = Get-FileHash $Current.FullName -Algorithm MD5 | Select-Object -ExpandProperty Hash
+}
+
+#Initialise parent root
+if ($Result.PARENTID -eq $null) {$Result.PARENTID=0}
+
+#send result on output
+$Result
+} 
+
+$list | export-csv -NoTypeInformation –append –path $DestinationCSVPath
