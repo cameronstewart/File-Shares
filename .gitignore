@@ -1,0 +1,45 @@
+# Output files
+*.csv
+*_errors.csv
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# PowerShell
+*.ps1xml
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.vs/
+*.code-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Archives
+*.zip
+*.7z
+*.tar.gz
+
+# Test outputs
+test-output/
+test-results/
+
+# Personal/sensitive data
+*password*
+*secret*
+*credential*
+.env
